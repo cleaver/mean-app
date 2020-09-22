@@ -3,16 +3,24 @@
     <mat-form-field class="input-wrapper">
       <input
         matInput
-        type="text"
         ngModel
         name="title"
+        placeholder="Post title"
         required
+        type="text"
         #title="ngModel"
       />
       <mat-error *ngIf="title.invalid">Please enter a post title.</mat-error>
     </mat-form-field>
     <mat-form-field class="textarea-wrapper">
-      <textarea matInput ngModel name="content" required #content="ngModel">
+      <textarea
+        matInput
+        ngModel
+        name="content"
+        placeholder="Post body"
+        required
+        #content="ngModel"
+      >
       </textarea>
       <mat-error *ngIf="content.invalid">Please enter content.</mat-error>
     </mat-form-field>
