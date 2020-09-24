@@ -1,7 +1,22 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
+
+const Post = require("./models/post");
 
 const app = express();
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/test", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("Connected to mongodb");
+  })
+  .catch(() => {
+    console.log("Mongodb connection failed");
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,36 +35,31 @@ app.use((req, res, next) => {
 });
 
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content,
+  });
   console.log(post);
-  res.status(201).json({ message: "success" });
+  post.save().then((result) => {
+    console.log(result);
+    res.status(201).json({ message: "success", id: result._id });
+  });
 });
 
 app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "1",
-      title: "First Post",
-      content:
-        "Aliqua mollit laborum non nulla velit aliqua irure id. Ex ullamco qui ad magna quis aute velit.",
-    },
-    {
-      id: "2",
-      title: "Second Post",
-      content:
-        "Veniam sit sit aute non cupidatat proident incididunt Lorem. Anim esse ut sint veniam proident culpa.",
-    },
-    {
-      id: "3",
-      title: "Third Post",
-      content:
-        "Sint ad deserunt exercitation et ipsum culpa. Adipisicing qui reprehenderit ullamco in excepteur voluptate.",
-    },
-  ];
+  Post.find().then((documents) => {
+    res.status(200).json({
+      message: "success",
+      posts: documents,
+    });
+  });
+});
 
-  res.status(200).json({
-    message: "success",
-    posts: posts,
+app.delete("/api/posts/:id", (req, res, next) => {
+  console.log("Deleting: " + req.params.id);
+  Post.deleteOne({ _id: req.params.id }).then((result) => {
+    console.log(result);
+    res.status(200).json({ message: "deleted: " + req.params.id });
   });
 });
 
