@@ -10,11 +10,6 @@ import { PostsService } from '../posts.service';
   styleUrls: ['./post-list.component.scss'],
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  // posts = [
-  //   {title: 'First Post', content: 'Aliqua mollit laborum non nulla velit aliqua irure id. Ex ullamco qui ad magna quis aute velit.', },
-  //   {title: 'Second Post', content: 'Veniam sit sit aute non cupidatat proident incididunt Lorem. Anim esse ut sint veniam proident culpa.', },
-  //   {title: 'Third Post', content: 'Sint ad deserunt exercitation et ipsum culpa. Adipisicing qui reprehenderit ullamco in excepteur voluptate.', },
-  // ];
   posts: Post[] = [];
   private postsSub: Subscription;
 
