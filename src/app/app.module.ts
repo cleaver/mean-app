@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +33,7 @@ import { PostListComponent } from './posts/post-list/post-list.component';
     MatCardModule,
     MatExpansionModule,
     MatInputModule,
+    MatProgressSpinnerModule,
     MatToolbarModule,
   ],
   providers: [],
