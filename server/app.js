@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const path = require("path");
 
 const postsRoutes = require("./routes/posts");
 
@@ -18,6 +19,7 @@ mongoose
     console.log("Mongodb connection failed");
   });
 
+app.use("/images", express.static(path.join("server/images")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

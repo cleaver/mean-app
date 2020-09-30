@@ -44,3 +44,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# uploaded images
+/server/images/*.jpg
+/server/images/*.jpeg
+/server/images/*.png
