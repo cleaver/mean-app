@@ -31,6 +31,6 @@
       >
     </mat-form-field>
     <br />
-    <button mat-raised-button color="primary" type="submit">Login</button>
+    <button *ngIf="!isLoading" mat-raised-button color="primary" type="submit">Login</button>
   </form>
 </mat-card>
