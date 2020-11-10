@@ -4,9 +4,6 @@ const router = express.Router();
 
 const Post = require("../models/post");
 const checkAuth = require("../middleware/check-auth");
-const {
-  RESOURCE_CACHE_PROVIDER,
-} = require("@angular/platform-browser-dynamic");
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
