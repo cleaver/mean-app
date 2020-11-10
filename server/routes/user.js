@@ -8,9 +8,9 @@ const router = express.Router();
 
 const JWT_KEY = process.env.JWT_KEY || "dev-secret--whee!";
 const HTTP_MESSAGE = {
-  AUTH_FAILED: { message: "auth failed" },
-  USER_CREATED: { message: "user created" },
-  POST_FAILED: { message: "post failed" },
+  AUTH_FAILED: { message: "Invalid login credentials." },
+  USER_CREATED: { message: "User created." },
+  POST_FAILED: { message: "Registration failed." },
 };
 
 router.post("/signup", (req, res, next) => {

@@ -4,11 +4,25 @@ const router = express.Router();
 
 const Post = require("../models/post");
 const checkAuth = require("../middleware/check-auth");
+const {
+  RESOURCE_CACHE_PROVIDER,
+} = require("@angular/platform-browser-dynamic");
 
 const MIME_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/jpg": "jpeg",
+};
+
+const HTTP_MESSAGE = {
+  AUTH_FAILED: { message: "Not authorized." },
+  POST_CREATE_FAILED: { message: "Post create failed." },
+  POST_CREATED: { message: "Post created." },
+  POST_GET_SUCCESS: { message: "Posts retreived successfully." },
+  POST_GET_FAILED: { message: "Posts failed successfully." },
+  POST_NOT_FOUND: { message: "Post not found." },
+  POST_UPDATED: { message: "Post updated." },
+  POST_UPDATE_FAILED: { message: "Post update failed." },
 };
 
 const storage = multer.diskStorage({
@@ -39,12 +53,18 @@ router.post(
       imagePath: url + "/images/" + req.file.filename,
       creator: req.userData.userId,
     });
-    post.save().then((result) => {
-      console.log(result);
-      res
-        .status(201)
-        .json({ message: "success", post: { ...result, id: result._id } });
-    });
+    post
+      .save()
+      .then((result) => {
+        console.log(result);
+        res.status(201).json({
+          ...HTTP_MESSAGE.POST_CREATED,
+          post: { ...result, id: result._id },
+        });
+      })
+      .catch((error) => {
+        res.status(400).json(HTTP_MESSAGE.POST_CREATE_FAILED);
+      });
   }
 );
 
@@ -65,16 +85,17 @@ router.put(
       imagePath: imagePath,
       creator: req.userData.userId,
     });
-    Post.updateOne(
-      { _id: req.params.id, creator: req.userData.userId },
-      post
-    ).then((result) => {
-      if (result.nModified > 0) {
-        res.status(200).json({ message: "success" });
-      } else {
-        res.status(401).json({ message: "not authorized" });
-      }
-    });
+    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
+      .then((result) => {
+        if (result.nModified > 0) {
+          res.status(200).json(HTTP_MESSAGE.POST_UPDATED);
+        } else {
+          res.status(401).json(HTTP_MESSAGE.AUTH_FAILED);
+        }
+      })
+      .catch((error) => {
+        res.status(400).json(HTTP_MESSAGE.POST_UPDATE_FAILED);
+      });
   }
 );
 
@@ -94,21 +115,28 @@ router.get("", (req, res, next) => {
     })
     .then((count) => {
       res.status(200).json({
-        message: "success",
+        ...HTTP_MESSAGE.POST_GET_SUCCESS,
         posts: fetchedPosts,
         maxPosts: count,
       });
+    })
+    .catch((error) => {
+      res.status(400).json(HTTP_MESSAGE.POST_GET_FAILED);
     });
 });
 
 router.get("/:id", (req, res, next) => {
-  Post.findById(req.params.id).then((post) => {
-    if (post) {
-      res.status(200).json(post);
-    } else {
-      res.status(404).json({ message: "Post not found!" });
-    }
-  });
+  Post.findById(req.params.id)
+    .then((post) => {
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res.status(404).json(HTTP_MESSAGE.POST_NOT_FOUND);
+      }
+    })
+    .catch((error) => {
+      res.status(400).json(HTTP_MESSAGE.POST_GET_FAILED);
+    });
 });
 
 router.delete("/:id", checkAuth, (req, res, next) => {
@@ -118,7 +146,7 @@ router.delete("/:id", checkAuth, (req, res, next) => {
       if (result.n > 0) {
         res.status(200).json({ message: "deleted: " + req.params.id });
       } else {
-        res.status(401).json({ message: "not authorized" });
+        res.status(401).json(HTTP_MESSAGE.AUTH_FAILED);
       }
     }
   );
