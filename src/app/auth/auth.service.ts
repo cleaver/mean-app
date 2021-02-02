@@ -4,6 +4,10 @@ import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { AuthData } from './auth-data.model';
 
+import { environment } from '../../environments/environment';
+
+const SERVER_URL = environment.apiUrl + '/user';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private authStatusListener = new Subject<boolean>();
@@ -16,7 +20,7 @@ export class AuthService {
 
   createUser(email: string, password: string) {
     const authData: AuthData = { email: email, password: password };
-    this.http.post('http://localhost:3000/api/user/signup', authData).subscribe(
+    this.http.post(SERVER_URL + '/signup', authData).subscribe(
       (response) => {
         this.router.navigate(['/']);
       },
@@ -46,7 +50,7 @@ export class AuthService {
     const authData: AuthData = { email: email, password: password };
     this.http
       .post<{ token: string; expiresIn: number; userId: string }>(
-        'http://localhost:3000/api/user/login',
+        SERVER_URL + '/login',
         authData
       )
       .subscribe(

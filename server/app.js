@@ -9,7 +9,7 @@ const userRoutes = require("./routes/user");
 const app = express();
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/test", {
+  .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
