@@ -49,3 +49,6 @@ Thumbs.db
 /server/images/*.jpg
 /server/images/*.jpeg
 /server/images/*.png
+
+# deployment details
+nodemon.json
